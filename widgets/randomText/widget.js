@@ -21,7 +21,6 @@ window.addEventListener('onWidgetLoad', function (obj) {
 });
 
 window.addEventListener('onEventReceived', function (obj) {
-
     // If it's not a message, stop everything.
     if (obj.detail.listener !== 'message') return;
 
@@ -29,19 +28,18 @@ window.addEventListener('onEventReceived', function (obj) {
     const textTrigger = '!apple'; // @TODO Give this a better name.
 
     if (data["text"].includes(textTrigger)) {
-        // @TODO sanitize the quotes.
-        document.getElementById('quotes').innerHTML = getRandom(quotes);
+        document.getElementById('quotes').innerHTML = decodeURIComponent(getRandom(quotes));
     }
 });
 
 function getRemoteQuotes(fileLocation) {
     let remoteFile = new XMLHttpRequest();
-    remoteFile.open("GET", fileLocation, false);
 
+    remoteFile.open("GET", fileLocation, false);
     remoteFile.onreadystatechange = function () {
         if (remoteFile.readyState === 4 && (remoteFile.status === 200 || remoteFile.status == 0)) {
             let returnedText = remoteFile.responseText;
-            // replace the array of quotes that are hardcoded in.
+            // Replaces the array of quotes that are hardcoded in.
             quotes = returnedText.split(';');
         }
     }
